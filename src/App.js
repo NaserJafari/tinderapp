@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import {
   collection,
   getDocs,
-  query,
   addDoc,
   deleteDoc,
   doc,
@@ -14,50 +13,50 @@ import { signInWithPopup } from "firebase/auth";
 
 function App() {
   const [user, setUser] = useState([]);
-  const [credentials, setCredientials] = useState([]);
+  const [credential, setCredential] = useState([]);
+  const collectionUsers = collection(db, "users");
+  const [titel, setTitel] = useState("");
+  const [omschrijving, setOmschrijving] = useState("");
 
-  const haalDocumentenOp = () => {
-    const q = query(collection(db, "users"));
-    getDocs(q).then((firebaseResponse) => {
-      const lijstVanDocumenten = firebaseResponse.docs.map((doc) => doc.data());
-      setUser(lijstVanDocumenten);
+  const createUser = async () => {
+    await addDoc(collectionUsers, {
+      titel: titel,
+      omschrijving: omschrijving,
     });
   };
 
-  // const toevoegenDocument = async () => {
-  //   await addDoc(collection(db, "users"), {
-  //     email: email,
-  //     first_name: first_name,
-  //   });
-  // };
+  const loginMetGoogle = async () => {
+    const credential = await signInWithPopup(auth, googleProvidor);
+    setCredential(credential);
+  };
 
-  const deletePost = async (id) => {
+  const deleteUser = async (id) => {
     const postDoc = doc(db, "users", id);
     await deleteDoc(postDoc);
   };
 
-  const loginMetGoogle = async () => {
-    const credentials = await signInWithPopup(auth, googleProvidor);
-    setCredientials(credentials);
-    // console.log(credentials);
-  };
-
   useEffect(() => {
-    haalDocumentenOp();
-  }, []);
+    const getUser = async () => {
+      const data = await getDocs(collectionUsers);
+      setUser(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    };
+    getUser();
+  },);
 
   return (
     <div className="App">
-      <div>
-        <button onClick={loginMetGoogle}>Login met Google</button>
-      </div>
+      <button onClick={loginMetGoogle}>Login met Google</button>
+      <form>
+        <input onChange={(e) => setTitel(e.target.value)} />
+        <input onChange={(e) => setOmschrijving(e.target.value)} />  
+        <button onClick={createUser}>Maak een user aan</button>
+      </form>
       {user.map((user) => (
         <div key={user.id}>
-          <p>{user.email}</p>
-          <div>
-            <button onClick={() => deletePost(user.id)}>Verwijder</button>
+          <h2>{user.titel}</h2>
+          <p>{user.omschrijving}</p>
+          <button onClick={() => deleteUser(user.id)}>Delete</button>
           </div>
-        </div>
       ))}
     </div>
   );
