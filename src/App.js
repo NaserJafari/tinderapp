@@ -1,5 +1,5 @@
 import "./App.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   collection,
   getDocs,
@@ -12,22 +12,31 @@ import { auth, googleProvidor } from "./config/firebase";
 import { signInWithPopup } from "firebase/auth";
 
 function App() {
-  const [user, setUser] = useState([]);
+  const [users, setUsers] = useState([]);
   const [credential, setCredential] = useState([]);
   const collectionUsers = collection(db, "users");
-  const [titel, setTitel] = useState("");
-  const [omschrijving, setOmschrijving] = useState("");
+  const [voornaam, setVoornaam] = useState("");
+  const [achternaam, setAchternaam] = useState("");
 
-  const createUser = async () => {
+  const haalDocumentenOp = useCallback(async () => {
+    const data = await getDocs(collectionUsers);
+    setUsers(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+  }, [collectionUsers]);
+
+  const createUser = async (e) => {
+    e.preventDefault();
     await addDoc(collectionUsers, {
-      titel: titel,
-      omschrijving: omschrijving,
+      voornaam: voornaam,
+      achternaam: achternaam,
     });
+    setVoornaam("");
+    setAchternaam("");
   };
 
   const loginMetGoogle = async () => {
     const credential = await signInWithPopup(auth, googleProvidor);
     setCredential(credential);
+    console.log(credential);
   };
 
   const deleteUser = async (id) => {
@@ -36,27 +45,31 @@ function App() {
   };
 
   useEffect(() => {
-    const getUser = async () => {
-      const data = await getDocs(collectionUsers);
-      setUser(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    };
-    getUser();
-  },);
+    haalDocumentenOp();
+  }, [haalDocumentenOp]);
 
   return (
     <div className="App">
       <button onClick={loginMetGoogle}>Login met Google</button>
-      <form>
-        <input onChange={(e) => setTitel(e.target.value)} />
-        <input onChange={(e) => setOmschrijving(e.target.value)} />  
-        <button onClick={createUser}>Maak een user aan</button>
+      <form onSubmit={createUser}>
+        <input
+          value={voornaam}
+          onChange={(e) => setVoornaam(e.target.value)}
+          placeholder="Voornaam"
+        />
+        <input
+          value={achternaam}
+          onChange={(e) => setAchternaam(e.target.value)}
+          placeholder="Achternaam"
+        />
+        <button type="submit">Maak een user aan</button>
       </form>
-      {user.map((user) => (
+      {users.map((user) => (
         <div key={user.id}>
-          <h2>{user.titel}</h2>
-          <p>{user.omschrijving}</p>
+          <h2>{user.voornaam}</h2>
+          <p>{user.achternaam}</p>
           <button onClick={() => deleteUser(user.id)}>Delete</button>
-          </div>
+        </div>
       ))}
     </div>
   );
