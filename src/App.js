@@ -49,21 +49,29 @@ function App() {
   }, [haalDocumentenOp]);
 
   return (
-    <div className="App">
-      <button onClick={loginMetGoogle}>Login met Google</button>
-      <form onSubmit={createUser}>
-        <input
-          value={voornaam}
-          onChange={(e) => setVoornaam(e.target.value)}
-          placeholder="Voornaam"
-        />
-        <input
-          value={achternaam}
-          onChange={(e) => setAchternaam(e.target.value)}
-          placeholder="Achternaam"
-        />
-        <button type="submit">Maak een user aan</button>
-      </form>
+    <div className="pagina">
+      <div className="navbar">
+        <div className="navlinks">
+          <p>Logo</p>
+        </div>
+        <div className="navrechts">
+          <button onClick={loginMetGoogle}>Login met Google</button>
+          <form onSubmit={createUser}>
+            <input
+            value={voornaam}
+            onChange={(e) => setVoornaam(e.target.value)}
+            placeholder="Voornaam"
+          />
+          <input
+            value={achternaam}
+            onChange={(e) => setAchternaam(e.target.value)}
+            placeholder="Achternaam"
+          />
+          <button type="submit">Maak een user aan</button>
+        </form>
+        </div>
+      </div>
+      <div className="container">
       {users.map((user) => (
         <div key={user.id}>
           <h2>{user.voornaam}</h2>
@@ -71,6 +79,7 @@ function App() {
           <button onClick={() => deleteUser(user.id)}>Delete</button>
         </div>
       ))}
+      </div>
     </div>
   );
 }
