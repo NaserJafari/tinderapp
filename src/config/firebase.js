@@ -9,13 +9,13 @@ import { getAuth, GoogleAuthProvider } from "firebase/auth";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyAMpawkmqILlZAo_FPg0Ira86RaKzy0Zfc",
-  authDomain: "tinderapp-f64c7.firebaseapp.com",
-  projectId: "tinderapp-f64c7",
-  storageBucket: "tinderapp-f64c7.appspot.com",
-  messagingSenderId: "940074548861",
-  appId: "1:940074548861:web:ab11b57565528666ae7b14",
-  measurementId: "G-BVZWJB0DSD"
+  apiKey: "AIzaSyBgQESprtdjcNUEsT2YRVHs_hF-S4cD88U",
+  authDomain: "firetinder-e8f27.firebaseapp.com",
+  projectId: "firetinder-e8f27",
+  storageBucket: "firetinder-e8f27.appspot.com",
+  messagingSenderId: "57826430488",
+  appId: "1:57826430488:web:9a7becc8e7164f05403d6d",
+  measurementId: "G-XCBMLRSZFG"
 };
 
 // Initialize Firebase

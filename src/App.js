@@ -6,6 +6,7 @@ import {
   addDoc,
   deleteDoc,
   doc,
+  updateDoc,
 } from "firebase/firestore";
 import { db } from "./config/firebase";
 import { auth, googleProvidor } from "./config/firebase";
@@ -39,6 +40,11 @@ function App() {
     console.log(credential);
   };
 
+  const updateUser = async (id) => {
+    const postDoc = doc(db, "users", id);
+    await updateDoc(postDoc);
+  };
+
   const deleteUser = async (id) => {
     const postDoc = doc(db, "users", id);
     await deleteDoc(postDoc);
@@ -46,7 +52,7 @@ function App() {
 
   useEffect(() => {
     haalDocumentenOp();
-  }, [haalDocumentenOp]);
+  }, []);
 
   return (
     <div className="pagina">
