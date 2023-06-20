@@ -16,27 +16,11 @@ function App() {
   const [users, setUsers] = useState([]);
   const [credential, setCredential] = useState([]);
   const collectionUsers = collection(db, "users");
-  const [voornaam, setVoornaam] = useState("");
-  const [achternaam, setAchternaam] = useState("");
-  const [plaatsnaam, setPlaatsnaam] = useState("");
-  const [foto, setFoto] = useState("");
 
   const haalDocumentenOp = useCallback(async () => {
     const data = await getDocs(collectionUsers);
     setUsers(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
   }, [collectionUsers]);
-
-  const createUser = async (e) => {
-    e.preventDefault();
-    await addDoc(collectionUsers, {
-      voornaam: voornaam,
-      achternaam: achternaam,
-      plaatsnaam: plaatsnaam,
-      foto: foto,
-    });
-    setVoornaam("");
-    setAchternaam("");
-  };
 
   const loginMetGoogle = async () => {
     const credential = await signInWithPopup(auth, googleProvidor);
@@ -66,19 +50,6 @@ function App() {
         </div>
         <div className="navrechts">
           <button onClick={loginMetGoogle}>Login met Google</button>
-          <form onSubmit={createUser}>
-            <input
-            value={voornaam}
-            onChange={(e) => setVoornaam(e.target.value)}
-            placeholder="Voornaam"
-          />
-          <input
-            value={achternaam}
-            onChange={(e) => setAchternaam(e.target.value)}
-            placeholder="Achternaam"
-          />
-          <button type="submit">Maak een user aan</button>
-        </form>
         </div>
       </div>
       <div className="container">
@@ -87,8 +58,9 @@ function App() {
           <p>{user.foto}</p>
           <h2>{user.voornaam}</h2>
           <p>{user.achternaam}</p>
+          <p>{user.geslacht}</p>
           <p>{user.plaatsnaam}</p>
-          <button onClick={() => deleteUser(user.id)}>Delete</button>
+          {/* <button onClick={() => deleteUser(user.id)}>Delete</button> */}
         </div>
       ))}
       </div>
