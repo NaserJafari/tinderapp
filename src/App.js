@@ -18,6 +18,8 @@ function App() {
   const collectionUsers = collection(db, "users");
   const [voornaam, setVoornaam] = useState("");
   const [achternaam, setAchternaam] = useState("");
+  const [plaatsnaam, setPlaatsnaam] = useState("");
+  const [foto, setFoto] = useState("");
 
   const haalDocumentenOp = useCallback(async () => {
     const data = await getDocs(collectionUsers);
@@ -29,6 +31,8 @@ function App() {
     await addDoc(collectionUsers, {
       voornaam: voornaam,
       achternaam: achternaam,
+      plaatsnaam: plaatsnaam,
+      foto: foto,
     });
     setVoornaam("");
     setAchternaam("");
@@ -80,8 +84,10 @@ function App() {
       <div className="container">
       {users.map((user) => (
         <div key={user.id}>
+          <p>{user.foto}</p>
           <h2>{user.voornaam}</h2>
           <p>{user.achternaam}</p>
+          <p>{user.plaatsnaam}</p>
           <button onClick={() => deleteUser(user.id)}>Delete</button>
         </div>
       ))}
